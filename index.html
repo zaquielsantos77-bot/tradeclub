@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeClub Pro — Clube de Investidores</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #F5C842;
+      --gold-dark: #D4A800;
+      --gold-light: #FFE082;
+      --green: #00E676;
+      --green-dark: #00C853;
+      --red: #FF5252;
+      --bg: #0A0A0F;
+      --surface: #12121A;
+      --surface2: #1A1A26;
+      --surface3: #22223A;
+      --border: rgba(245,200,66,0.12);
+      --border2: rgba(255,255,255,0.06);
+      --text: #F0F0FF;
+      --text-muted: #8080A0;
+      --radius: 12px;
+      --radius-lg: 18px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== TELA DE LOGIN ===== */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.08) 0%, transparent 65%);
+      padding: 20px;
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 60px rgba(245,200,66,0.04);
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo .icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .login-logo h1 {
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .login-logo p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0A0A0F;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245,200,66,0.35); }
+    .btn-login:active { transform: translateY(0); }
+    .login-divider {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: 20px 0;
+    }
+    .btn-register {
+      width: 100%;
+      padding: 13px;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-register:hover { background: rgba(245,200,66,0.06); }
+    .admin-hint {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .login-error {
+      background: rgba(255,82,82,0.1);
+      border: 1px solid rgba(255,82,82,0.3);
+      color: var(--red);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    /* ===== CADASTRO ===== */
+    #registerScreen {
+      min-height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.08) 0%, transparent 65%);
+      padding: 20px;
+    }
+
+    /* ===== DASHBOARD ===== */
+    #dashboard { display: none; min-height: 100vh; }
+    #adminPanel { display: none; min-height: 100vh; }
+
+    /* Header */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border2);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-logo {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-user {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .header-user span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .btn-logout {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { color: var(--red); border-color: rgba(255,82,82,0.3); }
+
+    /* Main */
+    .main { padding: 28px 24px; max-width: 900px; margin: 0 auto; }
+
+    /* Saudação */
+    .greeting {
+      margin-bottom: 28px;
+    }
+    .greeting h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .greeting p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,230,118,0.1);
+      color: var(--green);
+      border: 1px solid rgba(0,230,118,0.25);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .dot-pulse {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.5;transform:scale(0.8)}
+    }
+
+    /* Cards de saldo */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .stat-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+    .stat-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+    .stat-card.blue::before { background: linear-gradient(90deg, #7C6EFF, transparent); }
+    .stat-card.red::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+    }
+    .stat-value.gold-text { color: var(--gold); }
+    .stat-value.green-text { color: var(--green); }
+    .stat-value.blue-text { color: #7C6EFF; }
+    .stat-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .stat-icon {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 22px;
+      opacity: 0.3;
+    }
+
+    /* Seção de rendimentos */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Tabela de rendimentos */
+    .rendimentos-table {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .table-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding: 12px 20px;
+      background: var(--surface2);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding: 14px 20px;
+      border-top: 1px solid var(--border2);
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    .table-row:hover { background: var(--surface2); }
+    .table-row .green { color: var(--green); font-weight: 600; }
+    .table-row .gold { color: var(--gold); font-weight: 600; }
+    .table-empty {
+      padding: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Seção PIX */
+    .pix-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+    .pix-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pix-key-display {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 16px;
+      font-size: 14px;
+      color: var(--gold);
+      font-weight: 600;
+      min-width: 200px;
+    }
+    .btn-copy {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      padding: 11px 18px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-copy:hover { background: rgba(245,200,66,0.08); }
+    .btn-edit-pix {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text-muted);
+      padding: 11px 18px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-edit-pix:hover { color: var(--text); }
+
+    /* Solicitar saque */
+    .saque-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+    .saque-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .saque-input-group { flex: 1; min-width: 160px; }
+    .saque-input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .saque-input-group input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+    }
+    .saque-input-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .btn-saque {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #0A0A0F;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-saque:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,230,118,0.3); }
+
+    /* Mini curso */
+    .curso-card {
+      background: linear-gradient(135deg, rgba(245,200,66,0.08), rgba(124,110,255,0.06));
+      border: 1px solid rgba(245,200,66,0.2);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .curso-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .curso-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .curso-badge {
+      background: rgba(245,200,66,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(245,200,66,0.3);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .modulos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .modulo-item {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modulo-item:hover { border-color: var(--gold); background: var(--surface2); }
+    .modulo-num {
+      background: rgba(245,200,66,0.15);
+      color: var(--gold);
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .modulo-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+
+    /* Histórico saques */
+    .saques-list { margin-bottom: 28px; }
+    .saque-item {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .saque-info { font-size: 14px; }
+    .saque-info .date { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+    .saque-status {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .saque-status.pendente { background: rgba(245,200,66,0.15); color: var(--gold); }
+    .saque-status.aprovado { background: rgba(0,230,118,0.12); color: var(--green); }
+    .saque-status.rejeitado { background: rgba(255,82,82,0.12); color: var(--red); }
+
+    /* ===== PAINEL ADMIN ===== */
+    .admin-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border2);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-logo {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .admin-main { padding: 28px 24px; max-width: 1100px; margin: 0 auto; }
+    .admin-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .admin-tab {
+      padding: 9px 20px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .admin-tab.active { background: var(--surface); color: var(--gold); }
+
+    /* Tabela de membros */
+    .members-table {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+    }
+    .members-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .members-table th {
+      background: var(--surface2);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+    .members-table td {
+      padding: 13px 16px;
+      border-top: 1px solid var(--border2);
+      font-size: 14px;
+    }
+    .members-table tr:hover td { background: var(--surface2); }
+    .btn-sm {
+      padding: 5px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-green { background: rgba(0,230,118,0.15); color: var(--green); }
+    .btn-green:hover { background: rgba(0,230,118,0.25); }
+    .btn-red { background: rgba(255,82,82,0.15); color: var(--red); }
+    .btn-red:hover { background: rgba(255,82,82,0.25); }
+    .btn-gold { background: rgba(245,200,66,0.15); color: var(--gold); }
+    .btn-gold:hover { background: rgba(245,200,66,0.25); }
+
+    /* Adicionar rendimento */
+    .add-rendimento {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .row-flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+    .flex-1 { flex: 1; min-width: 160px; }
+    .btn-primary-sm {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0A0A0F;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary-sm:hover { transform: translateY(-1px); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 460px;
+    }
+    .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-confirm {
+      flex: 1;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border: none;
+      color: #0A0A0F;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 9999;
+      font-size: 14px;
+      animation: toastIn 0.3s ease;
+      max-width: 300px;
+    }
+    @keyframes toastIn {
+      from { transform: translateX(120px); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Indique e Ganhe */
+    .ref-code {
+      font-size: 22px; font-weight: 800; letter-spacing: 0.14em;
+      text-align: center; color: var(--gold);
+    }
+    .ref-grid { margin: 18px 0 0 !important; }
+    .ref-note { color: var(--text-muted); font-size: 12px; margin-top: 12px; }
+
+    .aviso-aporte {
+      display: none;
+      background: rgba(245,200,66,0.08);
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    #configScreen {
+      min-height: 100vh; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .badge-adm {
+      background: rgba(124,110,255,0.18); color: #A79BFF; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 100px; margin-left: 6px; vertical-align: middle;
+    }
+    .btn-login:disabled { opacity: 0.6; cursor: wait; transform: none; box-shadow: none; }
+
+    /* Responsivo */
+    @media (max-width: 600px) {
+      .main, .admin-main { padding: 16px; }
+      .header { padding: 0 16px; }
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .table-header, .table-row { grid-template-columns: 1fr 1fr; font-size: 12px; }
+      .table-header span:nth-child(3),
+      .table-row span:nth-child(3) { display: none; }
+      .login-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== FALTA CONFIGURAR ===== -->
+<div id="configScreen">
+  <div class="login-card" style="max-width:520px">
+    <div class="login-logo">
+      <span class="icon">⚙️</span>
+      <h1>Falta configurar</h1>
+      <p>Conecte o app ao seu banco de dados (Supabase)</p>
+    </div>
+    <p style="font-size:14px;line-height:1.6;color:var(--text-muted)">
+      Abra o arquivo <b style="color:var(--gold)">index.html</b> em um editor de texto e, no começo do script,
+      troque <b style="color:var(--gold)">SUPABASE_URL</b> e <b style="color:var(--gold)">SUPABASE_ANON_KEY</b>
+      pelos dados do seu projeto (Supabase → Project Settings → API). Depois suba o arquivo de novo.
+    </p>
+  </div>
+</div>
+
+<!-- ===== TELA DE LOGIN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">📈</span>
+      <h1>TradeClub Pro</h1>
+      <p>Clube de Investidores · Robô Mini Índice</p>
+    </div>
+    <div class="login-error" id="loginError">Usuário ou senha incorretos.</div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+    <div class="login-divider">— ou —</div>
+    <button class="btn-register" onclick="mostrarCadastro()">Criar nova conta</button>
+  </div>
+</div>
+
+<!-- ===== TELA DE CADASTRO ===== -->
+<div id="registerScreen">
+  <div class="login-card" style="max-width:460px">
+    <div class="login-logo">
+      <span class="icon">🚀</span>
+      <h1>Criar Conta</h1>
+      <p>Junte-se ao clube de investidores</p>
+    </div>
+    <div class="login-error" id="registerError">Preencha todos os campos corretamente.</div>
+    <div class="form-group">
+      <label>Nome Completo</label>
+      <input type="text" id="regNome" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="regEmail" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="regSenha" placeholder="Mínimo 6 caracteres">
+    </div>
+    <div class="form-group">
+      <label>Chave PIX</label>
+      <input type="text" id="regPix" placeholder="CPF, e-mail, telefone ou chave aleatória">
+    </div>
+    <div class="form-group">
+      <label>Valor que pretende investir (R$)</label>
+      <input type="number" id="regValor" placeholder="Ex: 1000" min="100">
+      <p style="color:var(--text-muted);font-size:12px;margin-top:6px">O valor entra no seu saldo depois que o administrador confirmar o recebimento.</p>
+    </div>
+    <div class="form-group">
+      <label>Código de Convite (opcional)</label>
+      <input type="text" id="regCodigo" placeholder="Ex: MAURO7K2" style="text-transform:uppercase" autocomplete="off">
+    </div>
+    <button class="btn-login" id="btnCadastro" onclick="fazerCadastro()">Criar conta gratuitamente</button>
+    <div class="login-divider"></div>
+    <button class="btn-register" onclick="voltarLogin()">← Voltar para login</button>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD USUÁRIO ===== -->
+<div id="dashboard">
+  <header class="header">
+    <div class="header-logo">📈 TradeClub Pro</div>
+    <div class="header-right">
+      <div class="header-user">Olá, <span id="hdrNome"></span></div>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </header>
+  <div class="main">
+    <div class="greeting">
+      <h2>Bem-vindo de volta, <span id="greetNome" style="color:var(--gold)"></span>! 👋</h2>
+      <p>Seu dinheiro está trabalhando por você agora.</p>
+      <div class="status-badge"><div class="dot-pulse"></div> Robô Ativo · Operando Mini Índice</div>
+    </div>
+
+    <div class="aviso-aporte" id="avisoAporte"></div>
+
+    <!-- Cards -->
+    <div class="cards-grid">
+      <div class="stat-card gold">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Saldo Total</div>
+        <div class="stat-value gold-text" id="saldoTotal">R$ 0,00</div>
+        <div class="stat-sub">Capital + Rendimentos + Bônus</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">📈</div>
+        <div class="stat-label">Rendimento Acumulado</div>
+        <div class="stat-value green-text" id="rendAcumulado">R$ 0,00</div>
+        <div class="stat-sub" id="rendPercent">+0,00%</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">🏦</div>
+        <div class="stat-label">Capital Inicial</div>
+        <div class="stat-value blue-text" id="capitalInicial">R$ 0,00</div>
+        <div class="stat-sub">Valor investido</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">Operações Hoje</div>
+        <div class="stat-value gold-text">2x</div>
+        <div class="stat-sub">1% meta por operação</div>
+      </div>
+    </div>
+
+    <!-- Rendimentos -->
+    <div class="section-title">📊 Histórico de Rendimentos</div>
+    <div class="rendimentos-table">
+      <div class="table-header">
+        <span>Data</span><span>Operação</span><span>Resultado</span><span>Valor</span>
+      </div>
+      <div id="rendimentosLista"></div>
+    </div>
+
+    <!-- PIX -->
+    <div class="section-title">💳 Minha Chave PIX</div>
+    <div class="pix-card">
+      <div class="pix-row">
+        <div class="pix-key-display" id="pixDisplay">—</div>
+        <button class="btn-copy" onclick="copiarPix()">📋 Copiar</button>
+        <button class="btn-edit-pix" onclick="abrirModalPix()">✏️ Alterar</button>
+      </div>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:10px">
+        Esta chave é usada para receber seus saques automaticamente.
+      </p>
+    </div>
+
+    <!-- Solicitar saque -->
+    <div class="section-title">💸 Solicitar Saque</div>
+    <div class="saque-card">
+      <div class="saque-row">
+        <div class="saque-input-group">
+          <label>Valor (R$)</label>
+          <input type="number" id="saqueValor" placeholder="Ex: 200.00" min="10">
+        </div>
+        <button class="btn-saque" onclick="solicitarSaque()">Solicitar Saque PIX</button>
+      </div>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:10px">
+        Saques processados em até 24h úteis. Mínimo R$ 10,00.
+      </p>
+    </div>
+
+    <!-- Saques solicitados -->
+    <div class="section-title">📋 Meus Saques</div>
+    <div class="saques-list" id="saquesLista"></div>
+
+    <!-- Indique e Ganhe -->
+    <div class="section-title">🤝 Indique e Ganhe</div>
+    <div class="pix-card">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:14px;line-height:1.5">
+        Convide amigos com o seu código. Quando alguém entrar no clube usando o seu código, você ganha
+        <b style="color:var(--gold)"><span id="refPerc">10</span>% do valor que ele investir</b>.
+        Exemplo: se ele entrar com R$ 1.000,00, você ganha R$ 100,00 de bônus.
+      </p>
+      <div class="pix-row">
+        <div class="pix-key-display ref-code" id="meuCodigo">—</div>
+        <button class="btn-copy" onclick="copiarCodigo()">📋 Copiar código</button>
+        <button class="btn-copy" onclick="copiarConvite()">🔗 Copiar convite</button>
+      </div>
+      <div class="cards-grid ref-grid">
+        <div class="stat-card blue">
+          <div class="stat-label">Amigos indicados</div>
+          <div class="stat-value blue-text" id="refQtd">0</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Bônus liberado</div>
+          <div class="stat-value green-text" id="refBonusOk">R$ 0,00</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Bônus a liberar</div>
+          <div class="stat-value gold-text" id="refBonusPend">R$ 0,00</div>
+        </div>
+      </div>
+      <p class="ref-note">O bônus é liberado no seu saldo depois que o administrador confirmar o aporte do seu indicado.</p>
+    </div>
+
+    <div class="section-title">👥 Meus Indicados</div>
+    <div class="saques-list" id="indicacoesLista" style="margin-bottom:28px"></div>
+
+    <!-- Mini Curso -->
+    <div class="section-title">🎓 Mini Curso — Operando Mini Índice</div>
+    <div class="curso-card">
+      <div class="curso-header">
+        <div class="curso-title">Mini Índice para Iniciantes</div>
+        <div class="curso-badge">✅ INCLUSO NO PLANO</div>
+      </div>
+      <div class="modulos-grid">
+        <div class="modulo-item">
+          <div class="modulo-num">01</div>
+          <div class="modulo-name">O que é o Mini Índice (WIN)?</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">02</div>
+          <div class="modulo-name">Como funciona o mercado futuro</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">03</div>
+          <div class="modulo-name">Leitura de gráfico e candles</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">04</div>
+          <div class="modulo-name">Como o robô opera por você</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">05</div>
+          <div class="modulo-name">Gestão de risco e proteção</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">06</div>
+          <div class="modulo-name">Estratégia de 2 operações/dia</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">07</div>
+          <div class="modulo-name">Analisando seus resultados</div>
+        </div>
+        <div class="modulo-item">
+          <div class="modulo-num">08</div>
+          <div class="modulo-name">Reinvestindo os rendimentos</div>
+        </div>
+      </div>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:14px">
+        🔒 Conteúdo liberado em vídeo pelo administrador do clube. Acesse pela área de membros.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAINEL ADMIN ===== -->
+<div id="adminPanel">
+  <header class="admin-header">
+    <div class="admin-logo">🛡️ TradeClub Pro — Administrador</div>
+    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+  </header>
+  <div class="admin-main">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="abaAdmin('membros', this)">👥 Membros</button>
+      <button class="admin-tab" onclick="abaAdmin('rendimentos', this)">📈 Lançar Rendimento</button>
+      <button class="admin-tab" onclick="abaAdmin('saques', this)">💸 Saques Pendentes</button>
+      <button class="admin-tab" onclick="abaAdmin('indicacoes', this)">🤝 Indicações</button>
+    </div>
+
+    <!-- ABA MEMBROS -->
+    <div id="abaMemb">
+      <div class="section-title">👥 Membros Cadastrados</div>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:14px;line-height:1.5">
+        Novos membros se cadastram sozinhos pelo link do app. Quando receber o dinheiro, clique em
+        <b style="color:var(--green)">✅ Aporte</b> para confirmar o valor: ele entra no saldo do membro e libera o bônus de quem indicou.
+      </p>
+      <div class="members-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>PIX</th>
+              <th>Aporte</th>
+              <th>Capital</th>
+              <th>Saldo Total</th>
+              <th>Rendimentos</th>
+              <th>Código</th>
+              <th>Indicado por</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="membrosTabela"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ABA RENDIMENTOS -->
+    <div id="abaRend" style="display:none">
+      <div class="add-rendimento">
+        <div class="section-title">📈 Lançar Rendimento</div>
+        <div class="row-flex">
+          <div class="flex-1">
+            <label style="display:block;font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Membro</label>
+            <select id="rendMembro" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;color:var(--text);font-size:14px;font-family:Inter,sans-serif">
+              <option value="todos">Todos os membros</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label style="display:block;font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">% Rendimento</label>
+            <input type="number" id="rendPercInput" value="1" min="0.1" max="100" step="0.1" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;color:var(--text);font-size:14px;font-family:Inter,sans-serif">
+          </div>
+          <div class="flex-1">
+            <label style="display:block;font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Operação</label>
+            <select id="rendOperacao" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;color:var(--text);font-size:14px;font-family:Inter,sans-serif">
+              <option value="Operação 1 (Manhã)">Operação 1 — Manhã</option>
+              <option value="Operação 2 (Tarde)">Operação 2 — Tarde</option>
+            </select>
+          </div>
+          <button class="btn-primary-sm" onclick="lancarRendimento()">Lançar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA SAQUES -->
+    <div id="abaSaques" style="display:none">
+      <div class="section-title">💸 Saques Pendentes</div>
+      <div id="saquesPendentesAdmin"></div>
+    </div>
+
+    <!-- ABA INDICAÇÕES -->
+    <div id="abaInd" style="display:none">
+      <div class="section-title">🤝 Indicações e Bônus (<span id="adminBonusPerc">10</span>% do aporte)</div>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:14px;line-height:1.5">
+        O bônus só entra no saldo de quem indicou depois que você confirmar que recebeu o aporte do novo membro.
+      </p>
+      <div id="indicacoesAdmin"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAIS ===== -->
+<!-- Modal PIX -->
+<div class="modal-overlay" id="modalPix">
+  <div class="modal">
+    <h3>✏️ Alterar Chave PIX</h3>
+    <div class="form-group">
+      <label>Nova Chave PIX</label>
+      <input type="text" id="novaPix" class="form-group input" placeholder="CPF, e-mail, telefone ou aleatória" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:13px 16px;color:var(--text);font-size:15px;font-family:Inter,sans-serif">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="fecharModal('modalPix')">Cancelar</button>
+      <button class="btn-confirm" onclick="salvarPix()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Membro -->
+<div class="modal-overlay" id="modalEditMembro">
+  <div class="modal">
+    <h3>✏️ Editar Membro</h3>
+    <input type="hidden" id="editEmail">
+    <div class="form-group">
+      <label>PIX</label>
+      <input type="text" id="editPix" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;color:var(--text);font-size:14px;font-family:Inter,sans-serif">
+    </div>
+    <div class="form-group">
+      <label>Capital Investido (R$)</label>
+      <input type="number" id="editCapital" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;color:var(--text);font-size:14px;font-family:Inter,sans-serif">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="fecharModal('modalEditMembro')">Cancelar</button>
+      <button class="btn-confirm" onclick="salvarEdicaoMembro()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ============================================================
+//  CONFIGURAÇÃO — cole aqui os dados do seu projeto Supabase
+//  (Supabase → Project Settings → API)
+// ============================================================
+const SUPABASE_URL = 'https://dirckticztcpxhduvjat.supabase.co';        // ex.: https://abcdxyz.supabase.co
+const SUPABASE_ANON_KEY = 'sb_publishable_YV8HSb5KG5Kdr_YAI0BhVQ_PARDXVyL'; // chave "anon public" (pode ficar no app)
+
+const CONFIGURADO = /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(SUPABASE_URL.trim()) && SUPABASE_ANON_KEY.trim().length >= 30;
+const sb = (CONFIGURADO && window.supabase)
+  ? window.supabase.createClient(SUPABASE_URL.trim(), SUPABASE_ANON_KEY.trim())
+  : null;
+
+let eu = null;          // resumo do usuário logado (linha de membros_resumo)
+let canal = null;       // canal realtime
+let adm = { membros: [], indicacoes: [], saques: [] };
+
+// ============================================================
+//  UTILS
+// ============================================================
+function num(v) { return Number(v || 0); }
+function fmt(v) {
+  return 'R$ ' + num(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+// aceita "1000", "1000,50", "1.000,50" e "1.000"
+function parseValor(txt) {
+  let t = String(txt).trim().replace(/[R$\s]/g, '');
+  if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+  else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+  return parseFloat(t);
+}
+function fmtData(iso) { return new Date(iso).toLocaleDateString('pt-BR'); }
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function toast(msg, tipo = 'success') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span>${tipo === 'success' ? '✅' : tipo === 'error' ? '❌' : 'ℹ️'}</span> ${esc(msg)}`;
+  document.body.appendChild(t);
+  setTimeout(() => t.style.opacity = '0', 3600);
+  setTimeout(() => t.remove(), 4000);
+}
+function msgErro(e) {
+  const m = (e && (e.message || e.error_description)) || String(e || 'Erro desconhecido.');
+  if (/invalid login credentials/i.test(m)) return 'E-mail ou senha incorretos.';
+  if (/already registered|already been registered/i.test(m)) return 'E-mail já cadastrado. Faça login.';
+  if (/email not confirmed/i.test(m)) return 'Confirme seu e-mail antes de entrar (veja sua caixa de entrada).';
+  if (/password should be at least/i.test(m)) return 'A senha precisa ter no mínimo 6 caracteres.';
+  if (/rate limit/i.test(m)) return 'Muitas tentativas. Aguarde um minuto e tente de novo.';
+  if (/failed to fetch|networkerror|network request/i.test(m)) return 'Sem conexão com o servidor. Verifique sua internet.';
+  return m;
+}
+function show(id) { document.getElementById(id).style.display = 'block'; }
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
+function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+function ocupado(btnId, on) { const b = document.getElementById(btnId); if (b) b.disabled = on; }
+
+const STATUS_IND = {
+  pendente:   { cls: 'pendente',  txt: 'Aguardando confirmação' },
+  confirmado: { cls: 'aprovado',  txt: 'Bônus liberado' },
+  cancelado:  { cls: 'rejeitado', txt: 'Cancelado' }
+};
+
+// ============================================================
+//  AUTH
+// ============================================================
+async function fazerLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  if (!email || !senha) { err.textContent = 'Informe e-mail e senha.'; err.style.display = 'block'; return; }
+
+  ocupado('btnLogin', true);
+  const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+  ocupado('btnLogin', false);
+  if (error) { err.textContent = msgErro(error); err.style.display = 'block'; return; }
+  await entrar();
+}
+
+async function fazerCadastro() {
+  const nome = document.getElementById('regNome').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('regSenha').value;
+  const pix = document.getElementById('regPix').value.trim();
+  const valor = parseFloat(document.getElementById('regValor').value);
+  const codigo = document.getElementById('regCodigo').value.trim().toUpperCase();
+  const err = document.getElementById('registerError');
+  err.style.display = 'none';
+  const falha = msg => { err.textContent = msg; err.style.display = 'block'; };
+
+  if (!nome || !email || senha.length < 6 || !pix || isNaN(valor) || valor < 100) {
+    return falha('Preencha todos os campos. Senha com no mínimo 6 caracteres e valor mínimo de R$ 100,00.');
+  }
+
+  ocupado('btnCadastro', true);
+  try {
+    let convidadoPor = null;
+    if (codigo) {
+      const { data, error } = await sb.rpc('verificar_codigo', { p_codigo: codigo });
+      if (error) return falha(msgErro(error));
+      if (!data) return falha('Código de convite inválido. Confira com quem te convidou ou deixe o campo em branco.');
+      convidadoPor = data;
+    }
+
+    const { data, error } = await sb.auth.signUp({
+      email, password: senha,
+      options: { data: { nome, pix, aporte: valor, codigo_convite: codigo } }
+    });
+    if (error) return falha(msgErro(error));
+
+    if (!data.session) {   // confirmação de e-mail ligada no Supabase
+      toast('Conta criada! Confirme seu e-mail para poder entrar.', 'info');
+      voltarLogin();
+      return;
+    }
+    await entrar();
+    toast(convidadoPor ? `Conta criada! Você entrou convidado por ${convidadoPor}.` : 'Conta criada com sucesso! Bem-vindo ao clube.');
+  } finally {
+    ocupado('btnCadastro', false);
+  }
+}
+
+async function entrar() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { mostrarLogin(); return; }
+  const { data, error } = await sb.from('membros_resumo').select('*').eq('id', session.user.id).maybeSingle();
+  if (error || !data) {
+    toast(error ? msgErro(error) : 'Não foi possível carregar seu perfil.', 'error');
+    await sb.auth.signOut();
+    mostrarLogin();
+    return;
+  }
+  eu = data;
+  assinarRealtime();
+  if (eu.role === 'admin') mostrarAdmin(); else mostrarDashboard();
+}
+
+async function fazerLogout() {
+  pararRealtime();
+  eu = null;
+  await sb.auth.signOut();
+  mostrarLogin();
+}
+
+function mostrarLogin() {
+  hide('dashboard'); hide('adminPanel'); hide('registerScreen');
+  show('loginScreen');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+function mostrarCadastro() {
+  hide('loginScreen');
+  document.getElementById('registerScreen').style.display = 'flex';
+}
+function voltarLogin() {
+  hide('registerScreen');
+  show('loginScreen');
+}
+
+// ============================================================
+//  ATUALIZAÇÃO AO VIVO
+// ============================================================
+function assinarRealtime() {
+  pararRealtime();
+  canal = sb.channel('tc-live');
+  ['membros', 'rendimentos', 'indicacoes', 'saques'].forEach(t =>
+    canal.on('postgres_changes', { event: '*', schema: 'public', table: t }, agendarRecarga));
+  canal.subscribe();
+}
+function pararRealtime() {
+  if (canal) { sb.removeChannel(canal); canal = null; }
+}
+let tmrRecarga = null;
+function agendarRecarga() {
+  clearTimeout(tmrRecarga);
+  tmrRecarga = setTimeout(recarregar, 500);
+}
+async function recarregar() {
+  if (!eu) return;
+  if (eu.role === 'admin') await renderAdmin(); else await renderDashboard();
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) recarregar(); });
+
+// ============================================================
+//  DASHBOARD DO MEMBRO
+// ============================================================
+function mostrarDashboard() {
+  hide('loginScreen'); hide('registerScreen'); hide('adminPanel');
+  show('dashboard');
+  renderDashboard();
+}
+
+async function renderDashboard() {
+  const uid = eu.id;
+  const [r1, r2, r3, r4, r5] = await Promise.all([
+    sb.from('membros_resumo').select('*').eq('id', uid).maybeSingle(),
+    sb.from('rendimentos').select('*').eq('membro_id', uid).order('created_at', { ascending: true }),
+    sb.from('saques').select('*').eq('membro_id', uid).order('created_at', { ascending: true }),
+    sb.from('indicacoes').select('*').eq('indicador_id', uid).order('created_at', { ascending: true }),
+    sb.from('config').select('*').eq('chave', 'bonus_indicacao_perc').maybeSingle()
+  ]);
+  const falha = [r1, r2, r3, r4].find(r => r.error);
+  if (falha) { toast(msgErro(falha.error), 'error'); return; }
+  if (!r1.data) return;
+  eu = r1.data;
+
+  const primeiro = (eu.nome || '').split(' ')[0];
+  document.getElementById('hdrNome').textContent = primeiro;
+  document.getElementById('greetNome').textContent = primeiro;
+
+  const aviso = document.getElementById('avisoAporte');
+  if (eu.aporte_status === 'pendente') {
+    aviso.style.display = 'block';
+    aviso.innerHTML = `⏳ Seu aporte de <b>${fmt(eu.aporte_declarado)}</b> está aguardando a confirmação do administrador. O saldo aparece aqui assim que ele for confirmado.`;
+  } else {
+    aviso.style.display = 'none';
+  }
+
+  const totalRend = num(eu.total_rend);
+  const capital = num(eu.capital);
+  const pct = capital > 0 ? (totalRend / capital * 100) : 0;
+  document.getElementById('saldoTotal').textContent = fmt(eu.saldo);
+  document.getElementById('rendAcumulado').textContent = fmt(totalRend);
+  document.getElementById('rendPercent').textContent = '+' + pct.toFixed(2) + '%';
+  document.getElementById('capitalInicial').textContent = fmt(capital);
+  document.getElementById('pixDisplay').textContent = eu.pix || 'Não cadastrada';
+
+  // Rendimentos
+  const rend = r2.data || [];
+  document.getElementById('rendimentosLista').innerHTML = !rend.length
+    ? '<div class="table-empty">🕐 Nenhum rendimento lançado ainda.</div>'
+    : [...rend].reverse().map(r => `
+      <div class="table-row">
+        <span>${fmtData(r.created_at)}</span>
+        <span>${esc(r.operacao)}</span>
+        <span class="green">+${num(r.perc).toFixed(2)}%</span>
+        <span class="gold">${fmt(r.valor)}</span>
+      </div>`).join('');
+
+  // Saques
+  const saques = r3.data || [];
+  document.getElementById('saquesLista').innerHTML = !saques.length
+    ? '<div style="color:var(--text-muted);font-size:14px;padding:10px 0">Nenhum saque solicitado ainda.</div>'
+    : [...saques].reverse().map(s => `
+      <div class="saque-item">
+        <div class="saque-info">
+          <div>${fmt(s.valor)} → PIX: <b>${esc(s.pix)}</b></div>
+          <div class="date">${fmtData(s.created_at)}</div>
+        </div>
+        <div class="saque-status ${esc(s.status)}">${esc(s.status.charAt(0).toUpperCase() + s.status.slice(1))}</div>
+      </div>`).join('');
+
+  renderIndicacoesMembro(r4.data || [], num(r5.data && r5.data.valor) || 10);
+}
+
+function renderIndicacoesMembro(inds, perc) {
+  document.getElementById('meuCodigo').textContent = eu.codigo || '—';
+  document.getElementById('refPerc').textContent = perc;
+  document.getElementById('refQtd').textContent = inds.filter(i => i.status !== 'cancelado').length;
+  document.getElementById('refBonusOk').textContent = fmt(eu.bonus_liberado);
+  document.getElementById('refBonusPend').textContent = fmt(eu.bonus_pendente);
+
+  const lista = document.getElementById('indicacoesLista');
+  if (!inds.length) {
+    lista.innerHTML = '<div style="color:var(--text-muted);font-size:14px;padding:10px 0">Você ainda não indicou ninguém. Compartilhe seu código!</div>';
+    return;
+  }
+  lista.innerHTML = [...inds].reverse().map(i => `
+    <div class="saque-item">
+      <div class="saque-info">
+        <div><b>${esc(i.indicado_nome)}</b> entrou com ${fmt(i.aporte)} → bônus <b style="color:var(--gold)">${fmt(i.valor)}</b></div>
+        <div class="date">${fmtData(i.created_at)} · ${num(i.perc)}% do aporte</div>
+      </div>
+      <div class="saque-status ${STATUS_IND[i.status].cls}">${STATUS_IND[i.status].txt}</div>
+    </div>`).join('');
+}
+
+function copiarCodigo() {
+  const codigo = document.getElementById('meuCodigo').textContent;
+  if (!codigo || codigo === '—') return;
+  navigator.clipboard.writeText(codigo);
+  toast('Código copiado!');
+}
+function copiarConvite() {
+  const codigo = document.getElementById('meuCodigo').textContent;
+  if (!codigo || codigo === '—') return;
+  const link = location.href.split('#')[0].split('?')[0] + '?convite=' + encodeURIComponent(codigo);
+  navigator.clipboard.writeText(`Entre no TradeClub Pro usando o meu código de convite ${codigo}: ${link}`);
+  toast('Convite copiado! Envie para seu amigo.');
+}
+function copiarPix() {
+  navigator.clipboard.writeText(document.getElementById('pixDisplay').textContent);
+  toast('Chave PIX copiada!');
+}
+
+function abrirModalPix() {
+  document.getElementById('novaPix').value = eu.pix || '';
+  abrirModal('modalPix');
+}
+async function salvarPix() {
+  const nova = document.getElementById('novaPix').value.trim();
+  if (!nova) return;
+  const { error } = await sb.rpc('atualizar_pix', { p_pix: nova });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  fecharModal('modalPix');
+  await renderDashboard();
+  toast('Chave PIX atualizada!');
+}
+
+async function solicitarSaque() {
+  const val = parseFloat(document.getElementById('saqueValor').value);
+  if (isNaN(val) || val < 10) { toast('Valor mínimo: R$ 10,00', 'error'); return; }
+  const { error } = await sb.rpc('solicitar_saque', { p_valor: val });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  document.getElementById('saqueValor').value = '';
+  await renderDashboard();
+  toast('Saque solicitado! Processamento em até 24h úteis.');
+}
+
+// ============================================================
+//  ADMIN
+// ============================================================
+function mostrarAdmin() {
+  hide('loginScreen'); hide('registerScreen'); hide('dashboard');
+  show('adminPanel');
+  renderAdmin();
+}
+
+function abaAdmin(aba, btn) {
+  ['abaMemb', 'abaRend', 'abaSaques', 'abaInd'].forEach(id => hide(id));
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  const map = { membros: 'abaMemb', rendimentos: 'abaRend', saques: 'abaSaques', indicacoes: 'abaInd' };
+  show(map[aba]);
+  if (btn) btn.classList.add('active');
+}
+
+async function renderAdmin() {
+  const [m, i, s] = await Promise.all([
+    sb.from('membros_resumo').select('*').order('created_at', { ascending: true }),
+    sb.from('indicacoes').select('*').order('created_at', { ascending: false }),
+    sb.from('saques').select('*').order('created_at', { ascending: false })
+  ]);
+  const falha = [m, i, s].find(r => r.error);
+  if (falha) { toast(msgErro(falha.error), 'error'); return; }
+  adm = { membros: m.data || [], indicacoes: i.data || [], saques: s.data || [] };
+  renderMembrosTabela();
+  renderSaquesAdmin();
+  renderIndicacoesAdmin();
+  preencherSelectMembros();
+}
+
+const nomeDe = id => (adm.membros.find(m => m.id === id) || {}).nome || '—';
+
+function renderMembrosTabela() {
+  const tbody = document.getElementById('membrosTabela');
+  if (!adm.membros.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:24px">Nenhum membro cadastrado.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = adm.membros.map(m => {
+    const pendente = m.aporte_status === 'pendente';
+    const aporte = pendente
+      ? `<span style="color:var(--gold)">${fmt(m.aporte_declarado)}</span><div style="font-size:11px;color:var(--text-muted)">aguardando</div>`
+      : `<span style="color:var(--green)">${fmt(m.aporte_declarado)}</span><div style="font-size:11px;color:var(--text-muted)">confirmado</div>`;
+    return `<tr>
+      <td><b>${esc(m.nome)}</b>${m.role === 'admin' ? '<span class="badge-adm">ADMIN</span>' : ''}</td>
+      <td style="color:var(--text-muted);font-size:13px">${esc(m.email)}</td>
+      <td style="color:var(--gold);font-size:13px">${esc(m.pix) || '—'}</td>
+      <td>${aporte}</td>
+      <td>${fmt(m.capital)}</td>
+      <td style="color:var(--gold);font-weight:700">${fmt(m.saldo)}</td>
+      <td style="color:var(--green)">${fmt(m.total_rend)}</td>
+      <td style="font-size:13px;font-weight:700;letter-spacing:0.05em">${esc(m.codigo)}</td>
+      <td style="color:var(--text-muted);font-size:13px">${m.indicado_por ? esc(nomeDe(m.indicado_por)) : '—'}</td>
+      <td style="white-space:nowrap">
+        ${pendente ? `<button class="btn-sm btn-green" onclick="confirmarAporte('${m.id}')">✅ Aporte</button>` : ''}
+        <button class="btn-sm btn-gold" onclick="abrirEditMembro('${m.id}')" style="margin-left:4px">✏️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function confirmarAporte(id) {
+  const m = adm.membros.find(x => x.id === id);
+  if (!m) return;
+  const txt = prompt(`Valor do aporte RECEBIDO de ${m.nome} (R$):`, num(m.aporte_declarado).toFixed(2).replace('.', ','));
+  if (txt === null) return;
+  const v = parseValor(txt);
+  if (isNaN(v) || v <= 0) { toast('Informe um valor válido.', 'error'); return; }
+  const { error } = await sb.rpc('admin_confirmar_aporte', { p_membro: id, p_valor: v });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  await renderAdmin();
+  toast('Aporte confirmado. O bônus de indicação (se houver) foi liberado.');
+}
+
+function preencherSelectMembros() {
+  const sel = document.getElementById('rendMembro');
+  const atual = sel.value;
+  sel.innerHTML = '<option value="todos">Todos os membros</option>' +
+    adm.membros.filter(m => m.aporte_status === 'confirmado')
+      .map(m => `<option value="${m.id}">${esc(m.nome)}</option>`).join('');
+  if ([...sel.options].some(o => o.value === atual)) sel.value = atual;
+}
+
+async function lancarRendimento() {
+  const alvo = document.getElementById('rendMembro').value;
+  const perc = parseFloat(document.getElementById('rendPercInput').value);
+  const op = document.getElementById('rendOperacao').value;
+  if (isNaN(perc) || perc <= 0) { toast('Informe um percentual válido.', 'error'); return; }
+
+  const quem = alvo === 'todos' ? 'TODOS os membros com aporte confirmado' : nomeDe(alvo);
+  if (!confirm(`Lançar ${perc}% (${op}) para ${quem}?\n\nEsta ação não pode ser desfeita pelo app.`)) return;
+
+  const { data, error } = await sb.rpc('admin_lancar_rendimento', {
+    p_alvo: alvo === 'todos' ? null : alvo, p_perc: perc, p_operacao: op
+  });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  await renderAdmin();
+  toast(`Rendimento de ${perc}% lançado para ${data} membro(s)!`);
+}
+
+function renderSaquesAdmin() {
+  const pend = adm.saques.filter(s => s.status === 'pendente');
+  const el = document.getElementById('saquesPendentesAdmin');
+  if (!pend.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:14px;padding:10px">Nenhum saque pendente.</div>';
+    return;
+  }
+  el.innerHTML = pend.map(s => `
+    <div class="saque-item">
+      <div class="saque-info">
+        <div><b>${esc(nomeDe(s.membro_id))}</b> — ${fmt(s.valor)} → PIX: <b>${esc(s.pix)}</b></div>
+        <div class="date">${fmtData(s.created_at)} · ID: ${s.id}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn-sm btn-green" onclick="processarSaque(${s.id},'aprovado')">✅ Aprovar</button>
+        <button class="btn-sm btn-red" onclick="processarSaque(${s.id},'rejeitado')">❌ Rejeitar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function processarSaque(id, status) {
+  const { error } = await sb.rpc('admin_processar_saque', { p_id: id, p_status: status });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  await renderAdmin();
+  toast(`Saque ${status === 'aprovado' ? 'aprovado ✅ (faça o PIX)' : 'rejeitado ❌'}`);
+}
+
+function renderIndicacoesAdmin() {
+  const el = document.getElementById('indicacoesAdmin');
+  const perc = adm.indicacoes.length ? num(adm.indicacoes[0].perc) : 10;
+  document.getElementById('adminBonusPerc').textContent = perc;
+  if (!adm.indicacoes.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:14px;padding:10px">Nenhuma indicação ainda.</div>';
+    return;
+  }
+  const ordem = { pendente: 0, confirmado: 1, cancelado: 2 };
+  const lista = [...adm.indicacoes].sort((a, b) => ordem[a.status] - ordem[b.status]);
+  el.innerHTML = lista.map(i => `
+    <div class="saque-item">
+      <div class="saque-info">
+        <div><b>${esc(nomeDe(i.indicador_id))}</b> indicou <b>${esc(i.indicado_nome)}</b> (${fmt(i.aporte)}) → bônus <b style="color:var(--gold)">${fmt(i.valor)}</b></div>
+        <div class="date">${fmtData(i.created_at)} · ${num(i.perc)}% do aporte</div>
+      </div>
+      ${i.status === 'pendente'
+        ? `<div style="display:flex;gap:6px">
+             <button class="btn-sm btn-green" onclick="confirmarAporte('${i.indicado_id}')">✅ Confirmar aporte e liberar bônus</button>
+             <button class="btn-sm btn-red" onclick="cancelarIndicacao(${i.id})">❌ Cancelar</button>
+           </div>`
+        : `<div class="saque-status ${STATUS_IND[i.status].cls}">${STATUS_IND[i.status].txt}</div>`}
+    </div>`).join('');
+}
+
+async function cancelarIndicacao(id) {
+  if (!confirm('Cancelar esta indicação? O bônus não será pago.')) return;
+  const { error } = await sb.rpc('admin_cancelar_indicacao', { p_id: id });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  await renderAdmin();
+  toast('Indicação cancelada.');
+}
+
+function abrirEditMembro(id) {
+  const m = adm.membros.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('editEmail').value = id;   // guarda o id do membro
+  document.getElementById('editPix').value = m.pix || '';
+  document.getElementById('editCapital').value = num(m.capital);
+  abrirModal('modalEditMembro');
+}
+
+async function salvarEdicaoMembro() {
+  const id = document.getElementById('editEmail').value;
+  const pix = document.getElementById('editPix').value.trim();
+  const capital = parseFloat(document.getElementById('editCapital').value);
+  if (isNaN(capital) || capital < 0) { toast('Capital inválido.', 'error'); return; }
+  const { error } = await sb.rpc('admin_editar_membro', { p_membro: id, p_pix: pix, p_capital: capital });
+  if (error) { toast(msgErro(error), 'error'); return; }
+  fecharModal('modalEditMembro');
+  await renderAdmin();
+  toast('Membro atualizado!');
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+(async function init() {
+  if (!CONFIGURADO || !sb) {
+    hide('loginScreen');
+    document.getElementById('configScreen').style.display = 'flex';
+    return;
+  }
+
+  ['loginEmail', 'loginPassword'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
+  });
+
+  sb.auth.onAuthStateChange(ev => {
+    if (ev === 'SIGNED_OUT') { eu = null; pararRealtime(); mostrarLogin(); }
+  });
+
+  const convite = new URLSearchParams(location.search).get('convite');
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await entrar();
+  } else if (convite) {
+    document.getElementById('regCodigo').value = convite.toUpperCase();
+    mostrarCadastro();
+  }
+})();
+
+</script>
+</body>
+</html>
